@@ -22,11 +22,6 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-        with:
-          cmdline-version: '11.0'
-          build-tools: '34.0.0'
-          platforms: 'android-34'
-          ndk: '26.1.10909125'
 
       - name: Build Debug APK
         working-directory: android
