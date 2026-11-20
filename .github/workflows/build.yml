@@ -30,13 +30,11 @@ jobs:
           yes | "$SDKMANAGER" --sdk_root="$ANDROID_HOME" "platform-tools" "platforms;android-34" "build-tools;34.0.0" "ndk;26.1.10909125" "cmake;3.30.5"
 
       - name: Prepare DXVK Android
-        env:
-          ANDROID_HOME: /usr/local/lib/android/sdk
-          ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
         run: |
           git clone https://github.com/doitsujin/dxvk.git /tmp/dxvk-src
           git -C /tmp/dxvk-src checkout c8dc91fabd00cac11d697ccf07426e798393cd40
-          python3 ports/dxvk_android/prepare.py /tmp/dxvk-src /tmp/dxvk-prepared
+          python3 ports/dxvk_android/prepare.py /tmp/dxvk-src build/dxvk-source
+          git clone --depth 1 https://github.com/wheremyfoodat/pcrecomp.git ../pcrecomp || true
 
       - name: Build Debug APK
         working-directory: android
@@ -45,7 +43,7 @@ jobs:
           ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug -PDXVK_SOURCE=/tmp/dxvk-prepared
+          ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
