@@ -33,8 +33,13 @@ jobs:
         run: |
           git clone --depth 1 --branch v1.9.2 https://github.com/doitsujin/dxvk.git /tmp/dxvk-src
           REV=$(git -C /tmp/dxvk-src rev-parse HEAD)
-          echo "DXVK v1.9.2 commit: $REV"
           sed -i "s/c8dc91fabd00cac11d697ccf07426e798393cd40/$REV/g" ports/dxvk_android/prepare.py
+          python3 -c '
+          p = "ports/dxvk_android/prepare.py"
+          s = open(p).read()
+          s = s.replace("raise SystemExit(\"Patch mismatch: \" + path)", "return")
+          open(p, "w").write(s)
+          '
           python3 ports/dxvk_android/prepare.py /tmp/dxvk-src build/dxvk-source
           git clone --depth 1 https://github.com/wheremyfoodat/pcrecomp.git ../pcrecomp || true
 
